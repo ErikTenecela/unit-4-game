@@ -1,91 +1,70 @@
-$( document ).ready(function(){
-    var Random=Math.floor(Math.random()*101+19)
-    
-    $('#randomNumber').text(Random);
+var totalscore;
+var lost = 0;
+var win = 0;
+var previous = 0;
 
-    var num1= Math.floor(Math.random()*11+1)
-    var num2= Math.floor(Math.random()*11+1)
-    var num3= Math.floor(Math.random()*11+1)
-    var num4= Math.floor(Math.random()*11+1)
-   
-    var userTotal= 0; 
-    var wins= 0;
-    var losses = 0;
-   
-  $('#numberWins').text(wins);
-  $('#numberLosses').text(losses);
- 
-  function reset(){
-        Random=Math.floor(Math.random()*101+19);
-        console.log(Random)
-        $('#randomNumber').text(Random);
-        num1= Math.floor(Math.random()*11+1);
-        num2= Math.floor(Math.random()*11+1);
-        num3= Math.floor(Math.random()*11+1);
-        num4= Math.floor(Math.random()*11+1);
-        userTotal= 0;
-        $('#finalTotal').text(userTotal);
-        } 
- 
-  function yay(){
-  alert("You won!");
-    wins++; 
-    $('#numberWins').text(wins);
-    reset();
-  }
- 
-  function loser(){
-  alert ("You lose!");
-    losses++;
-    $('#numberLosses').text(losses);
-    reset()
-  }
- 
-    $('#one').on ('click', function(){
-      userTotal = userTotal + num1;
-      console.log("New userTotal= " + userTotal);
-      $('#finalTotal').text(userTotal); 
-           
-          if (userTotal == Random){
-            yay();
-          }
-          else if ( userTotal > Random){
-            loser();
-          }   
-    })  
-    $('#two').on ('click', function(){
-      userTotal = userTotal + num2;
-      console.log("New userTotal= " + userTotal);
-      $('#finalTotal').text(userTotal); 
-          if (userTotal == Random){
-            yay();
-          }
-          else if ( userTotal > Random){
-            loser();
-          } 
-    })  
-    $('#three').on ('click', function(){
-      userTotal = userTotal + num3;
-      console.log("New userTotal= " + userTotal);
-      $('#finalTotal').text(userTotal);
+var resetAndStart = function () {
+    
+    $(".crystals").empty();
+
+    var images = ["https://previews.123rf.com/images/ryzhi/ryzhi1609/ryzhi160900075/64720834-realistic-red-ruby-isolated-on-white-background-shining-red-jewel-colorful-gemstone-can-be-used-as-p.jpg",
+"https://images-na.ssl-images-amazon.com/images/I/712iSBHBTaL._SX425_.jpg",
+"https://4.imimg.com/data4/JA/YY/MY-26523822/yellow-ruby-500x500.jpg",
+"https://4.imimg.com/data4/IR/BV/MY-26523822/blue-ruby-500x500.jpg"]
+
+totalscore = Math.floor(Math.random() * 69) + 30;
+$("#result").html("Random result: " + totalscore);
+
+for (let i = 0; i < 4; i ++ ) {
+    var random = Math.floor(Math.random() * 11) +1 ;
+    console.log(random)
+    var crystal = $("<div>");
+
+    crystal.attr({
+        "class" : 'crystal',
+        "random-number": random 
+    });
+    crystal.css({
+        "background-image" : "url('" + images[i] + "')",
+        "background-size" : "cover"
+    })
+
   
-            if (userTotal == Random){
-            yay();
-          }
-          else if ( userTotal > Random){
-            loser();
-          } 
-    })  
-    $('#four').on ('click', function(){
-      userTotal = userTotal + num4;
-      console.log("New userTotal= " + userTotal);
-      $('#finalTotal').text(userTotal); 
+    $(".crystals").append(crystal);
+}
+$("#previous").html("total score:" + previous);
+}
+
+resetAndStart();
+
+$(document).on("click",".crystal", function() {
+   
+    var num = parseInt($(this).attr("random-number"));
+
+    previous += num;
+
+    $("#previous").html("total score:" + previous);
+
+    console.log(previous);
+
+    if (previous > totalscore) {
         
-            if (userTotal == Random){
-            yay();
-          }
-          else if ( userTotal > Random){
-            loser();
-          }
-    });   
-  }); 
+        lost++;
+        $("#lost").html("You Lost:" + lost);
+
+        previous = 0;
+
+        resetAndStart();
+
+    } else if (previous === totalscore) {
+        
+        win++;
+
+        $("#win").html("You Win:"+win);
+
+        previous = 0;
+        
+        resetAndStart();
+    }
+
+})
